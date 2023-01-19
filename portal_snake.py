@@ -3,10 +3,10 @@ import random
 
 # Initialize pygame and set screen size
 pygame.init()
-width = 700
+width = 500
 height = 500
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Portal Snake")
+pygame.display.set_caption("Pygame Snake")
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
@@ -62,6 +62,8 @@ def game_over():
 
 key_queue = []
 
+last_direction = direction
+
 # Run the game loop
 generate_food()
 while True:
@@ -69,42 +71,38 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
-        # Handle key inputs for snake movement
         elif event.type == pygame.KEYDOWN:
             key_queue.append(event.key)
-    # Process key presses in the queue
-    while len(key_queue) > 0:
-        key = key_queue.pop(0)
-        # Check if snake is about to wrap around the wall before changing direction
-        if (direction == "right" and x1 >= width-block_size) or (direction == "left" and x1 <= 0) or (direction == "up" and y1 <= 0) or (direction == "down" and y1 >= height-block_size):
-            continue
-        if key == pygame.K_LEFT and direction != "right":
-            direction = "left"
-        elif key == pygame.K_RIGHT and direction != "left":
-            direction = "right"
-        elif key == pygame.K_UP and direction != "down":
-            direction = "up"
-        elif key == pygame.K_DOWN and direction != "up":
-            direction = "down"
-    
-    # Move snake and wrap around screen
+
+        while len(key_queue) > 0:
+            key = key_queue.pop(0)
+            if key == pygame.K_LEFT and last_direction != "right":
+                direction = "left"
+            elif key == pygame.K_RIGHT and last_direction != "left":
+                direction = "right"
+            elif key == pygame.K_UP and last_direction != "down":
+                direction = "up"
+            elif key == pygame.K_DOWN and last_direction != "up":
+                direction = "down"
     if direction == "right":
         x1 += block_size
-    if direction == "left":
+    elif direction == "left":
         x1 -= block_size
-    if direction == "up":
+    elif direction == "up":
         y1 -= block_size
-    if direction == "down":
+    elif direction == "down":
         y1 += block_size
     
     if x1 > width:
         x1 = 0
-    if x1 < 0:
+    elif x1 < 0:
         x1 = width
-    if y1 > height:
+    elif y1 > height:
         y1 = 0
-    if y1 < 0:
+    elif y1 < 0:
         y1 = height
+    
+    last_direction = direction
 
     screen.fill(black)
 
