@@ -38,6 +38,7 @@ score = 0
 # Set font for displaying score
 font_style = pygame.font.SysFont(None, 50)
 
+
 def generate_food():
     global foodx, foody, foodx2, foody2
     foodx = round(random.randrange(0, width - block_size) / block_size) * block_size
@@ -45,20 +46,23 @@ def generate_food():
     foodx2 = round(random.randrange(0, width - block_size) / block_size) * block_size
     foody2 = round(random.randrange(0, height - block_size) / block_size) * block_size
 
+
 # Function to display score on screen
 def show_score(score):
     score_text = font_style.render("Score: " + str(score), True, white)
-    screen.blit(score_text, [0,0])
+    screen.blit(score_text, [0, 0])
+
 
 # Game over function
 def game_over():
     message = font_style.render("Game Over", True, red)
-    text_rect = message.get_rect(center=(width/2, height/2))
+    text_rect = message.get_rect(center=(width / 2, height / 2))
     screen.blit(message, text_rect)
     pygame.display.update()
     pygame.time.wait(2000)
     pygame.quit()
     quit()
+
 
 key_queue = []
 
@@ -92,7 +96,7 @@ while True:
         y1 -= block_size
     elif direction == "down":
         y1 += block_size
-    
+
     if x1 > width:
         x1 = 0
     elif x1 < 0:
@@ -101,7 +105,7 @@ while True:
         y1 = 0
     elif y1 < 0:
         y1 = height
-    
+
     last_direction = direction
 
     screen.fill(black)
@@ -114,7 +118,7 @@ while True:
         del snake_body[0]
 
     # Draw snake and food
-    for x,y in snake_body:
+    for x, y in snake_body:
         pygame.draw.rect(screen, green, [x, y, block_size, block_size])
     pygame.draw.rect(screen, red, [foodx, foody, block_size, block_size])
     pygame.draw.rect(screen, red, [foodx2, foody2, block_size, block_size])
