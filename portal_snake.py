@@ -1,3 +1,4 @@
+from collections import deque
 import pygame
 import random
 
@@ -19,15 +20,17 @@ green = (0, 255, 0)
 
 # Set snake block size and initial position
 block_size = 10
-x1 = width // 2
-y1 = height // 2
+snake_rect = pygame.Rect(width // 2, height // 2, block_size, block_size)
 
 # Set initial direction
 direction = "right"
+last_direction = direction
 
-# Set snake's body as a list of blocks
-snake_body = []
+# Set snake's body as a deque of rects
+snake_body = deque()
 snake_length = 3
+for i in range(snake_length):
+    snake_body.appendleft(snake_rect.copy())
 
 # Set the speed of the snake
 snake_speed = 15
@@ -38,13 +41,31 @@ score = 0
 # Set font for displaying score
 font_style = pygame.font.SysFont(None, 50)
 
+# Create a list to store food rects
+food_rects = []
 
+
+# Function to generate food at random locations
 def generate_food():
-    global foodx, foody, foodx2, foody2
-    foodx = round(random.randrange(0, width - block_size) / block_size) * block_size
-    foody = round(random.randrange(0, height - block_size) / block_size) * block_size
-    foodx2 = round(random.randrange(0, width - block_size) / block_size) * block_size
-    foody2 = round(random.randrange(0, height - block_size) / block_size) * block_size
+    global food_rects
+    if len(food_rects) == 0:
+        for i in range(5):
+            food_rect = pygame.Rect(
+                round(random.randrange(0, width - block_size) / block_size) * block_size,
+                round(random.randrange(0, height - block_size) / block_size) * block_size,
+                block_size,
+                block_size,
+            )
+            food_collision = False
+            # Check if food is going to be generated inside snake
+            for snake_block in snake_body:
+                if snake_block.colliderect(food_rect):
+                    food_collision = True
+                    break
+            if not food_collision:
+                food_rects.append(food_rect)
+            else:
+                i -= 1
 
 
 # Function to display score on screen
@@ -66,8 +87,6 @@ def game_over():
 
 key_queue = []
 
-last_direction = direction
-
 # Run the game loop
 generate_food()
 while True:
@@ -78,65 +97,55 @@ while True:
         elif event.type == pygame.KEYDOWN:
             key_queue.append(event.key)
 
-        while len(key_queue) > 0:
-            key = key_queue.pop(0)
-            if key == pygame.K_LEFT and last_direction != "right":
-                direction = "left"
-            elif key == pygame.K_RIGHT and last_direction != "left":
-                direction = "right"
-            elif key == pygame.K_UP and last_direction != "down":
-                direction = "up"
-            elif key == pygame.K_DOWN and last_direction != "up":
-                direction = "down"
-    if direction == "right":
-        x1 += block_size
-    elif direction == "left":
-        x1 -= block_size
-    elif direction == "up":
-        y1 -= block_size
-    elif direction == "down":
-        y1 += block_size
+    while len(key_queue) > 0:
+        key = key_queue.pop(0)
+        if key == pygame.K_LEFT and last_direction != "right":
+            direction = "left"
+        elif key == pygame.K_RIGHT and last_direction != "left":
+            direction = "right"
+        elif key == pygame.K_UP and last_direction != "down":
+            direction = "up"
+        elif key == pygame.K_DOWN and last_direction != "up":
+            direction = "down"
 
-    if x1 > width:
-        x1 = 0
-    elif x1 < 0:
-        x1 = width
-    elif y1 > height:
-        y1 = 0
-    elif y1 < 0:
-        y1 = height
+    # Move snake and wrap around screen
+    if direction == "right":
+        snake_rect.x += block_size
+    elif direction == "left":
+        snake_rect.x -= block_size
+    elif direction == "up":
+        snake_rect.y -= block_size
+    elif direction == "down":
+        snake_rect.y += block_size
+
+    if snake_rect.x > width:
+        snake_rect.x = 0
+    elif snake_rect.x < 0:
+        snake_rect.x = width
+    elif snake_rect.y > height:
+        snake_rect.y = 0
+    elif snake_rect.y < 0:
+        snake_rect.y = height
 
     last_direction = direction
 
     screen.fill(black)
 
-    snake_head = []
-    snake_head.append(x1)
-    snake_head.append(y1)
-    snake_body.append(snake_head)
-    if len(snake_body) > snake_length:
-        del snake_body[0]
+    # Check for collision with food
+    for food in food_rects:
+        if snake_rect.colliderect(food):
+            score += 1
+            food_rects.remove(food)
+            snake_length += 1
+            snake_body.appendleft(snake_rect.copy())
+            generate_food()
+            break
 
-    # Draw snake and food
-    for x, y in snake_body:
-        pygame.draw.rect(screen, green, [x, y, block_size, block_size])
-    pygame.draw.rect(screen, red, [foodx, foody, block_size, block_size])
-    pygame.draw.rect(screen, red, [foodx2, foody2, block_size, block_size])
-
-    # Check if snake has eaten food
-    if (x1 == foodx and y1 == foody) or (x1 == foodx2 and y1 == foody2):
-        generate_food()
-        snake_length += 1
-        score += 1
-
-    # Update score on screen
-    show_score(score)
-
-    # Check for collision with snake body
-    for block in snake_body[:-1]:
-        if block[0] == x1 and block[1] == y1:
+    # Check for collision with body
+    for i in range(len(snake_body) - 1):
+        if snake_rect.colliderect(snake_body[i + 1]):
             game_over()
 
-    # Update screen
+    # Move the body
     pygame.display.update()
     clock.tick(snake_speed)
