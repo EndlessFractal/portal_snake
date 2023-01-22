@@ -56,8 +56,8 @@ def generate_food():
                 block_size,
                 block_size,
             )
-            food_collision = False
             # Check if food is going to be generated inside snake
+            food_collision = False
             for snake_block in snake_body:
                 if snake_block.colliderect(food_rect):
                     food_collision = True
@@ -146,6 +146,19 @@ while True:
         if snake_rect.colliderect(snake_body[i + 1]):
             game_over()
 
-    # Move the body
+    # Move the snake body
+    snake_body.appendleft(snake_rect.copy())
+    snake_body.pop()
+    # Draw the snake body
+    for snake_block in snake_body:
+        pygame.draw.rect(screen, white, snake_block)
+
+    # Draw food
+    for food in food_rects:
+        pygame.draw.rect(screen, green, food)
+
+    # Display score
+    show_score(score)
+
     pygame.display.update()
     clock.tick(snake_speed)
