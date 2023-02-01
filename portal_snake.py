@@ -47,7 +47,6 @@ food_rects = []
 
 # Function to generate food at random locations
 def generate_food():
-    global food_rects
     if len(food_rects) == 0:
         for i in range(5):
             food_rect = pygame.Rect(
