@@ -35,7 +35,7 @@ jobs:
       - name: Build .exe
         uses: Nuitka/Nuitka-Action@main
         with:
-          script-name: viper.py
+          script-name: portal_snake.py
           onefile: true
           disable-console: false
 
