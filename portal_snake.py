@@ -47,7 +47,6 @@ def game():
     # Create a list to store food rects
     food_rects = []
 
-
     # Function to generate food at random locations
     def generate_food():
         if len(food_rects) == 0:
@@ -69,12 +68,10 @@ def game():
                 else:
                     i -= 1
 
-
     # Function to display score on screen
     def show_score(score):
         score_text = font_style.render("Score: " + str(score), True, white)
         screen.blit(score_text, [0, 0])
-
 
     # Game over function
     def game_over():
@@ -84,8 +81,6 @@ def game():
         pygame.display.update()
         pygame.time.wait(2000)
         pygame.quit()
-        quit()
-
 
     key_queue = []
 
@@ -164,5 +159,6 @@ def game():
 
         pygame.display.update()
         clock.tick(snake_speed)
+
 
 game()
