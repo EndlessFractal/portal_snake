@@ -44,11 +44,11 @@ def game():
 
     background_surface = create_tiled_background(background_path, block_size, width, height)
 
-    
+    # Load music and sfx paths
     audio = os.path.join(sys._MEIPASS, 'resources', 'music.mp3')
     sound = os.path.join(sys._MEIPASS, 'resources', 'eat.mp3')
     
-    # Load and play music continuously
+    # Play music continuously
     pygame.mixer.music.load(audio)
     pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play(loops=-1)
