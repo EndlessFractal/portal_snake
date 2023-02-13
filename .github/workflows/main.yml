@@ -30,7 +30,7 @@ jobs:
           pip install -r requirements.txt
           
       - name: Build executable
-        run: pyinstaller --onefile --name portal_snake portal_snake.py
+        run: pyinstaller --onefile --noconsole --name portal_snake portal_snake.py
         
       - name: Copy files to build directory
         run: |
