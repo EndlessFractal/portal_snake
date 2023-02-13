@@ -30,7 +30,13 @@ jobs:
           pip install -r requirements.txt
           
       - name: Build executable
-        run: pyinstaller --onefile --add-data "background.png;." --add-data "eat.mp3;." --add-data "music.mp3;." --name portal_snake portal_snake.py
+        run: pyinstaller --onefile --name portal_snake portal_snake.py
+        
+      - name: Copy files to build directory
+        run: |
+          cp background.png dist/
+          cp eat.mp3 dist/
+          cp music.mp3 dist/
       
       - name: Upload executable
         uses: actions/upload-artifact@v2
