@@ -26,10 +26,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install pyinstaller
           pip install -r requirements.txt
-      
+          
       - name: Build executable
-        run: pyinstaller --onefile portal_snake.py --add-data "background.png:." --add-data "eat.mp3:." --add-data "music.mp3:."
+        run: pyinstaller --onefile portal_snake.py --add-data "background.png;." --add-data "eat.mp3;." --add-data "music.mp3;." --name portal_snake
       
       - name: Upload executable
         uses: actions/upload-artifact@v2
