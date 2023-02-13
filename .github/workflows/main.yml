@@ -36,8 +36,8 @@ jobs:
         uses: Nuitka/Nuitka-Action@main
         with:
           script-name: portal_snake.py
-          onefile: true
-          disable-console: false
+          onefile: false
+          disable-console: true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3.1.2
