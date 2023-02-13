@@ -113,7 +113,6 @@ def game():
         pygame.display.update()
         pygame.time.wait(2000)
         pygame.quit()
-        quit()
 
     key_queue = []
 
