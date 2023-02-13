@@ -28,21 +28,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
-      - name: Build EXE
-        uses: Nuitka/Nuitka-Action@main
-        with:
-          script-name: portal_snake.py
-          onefile: true
-          include-module: |
-            pygame
-            pygame._view
-            background
-            eat
-            music
+      - name: Build executable
+        run: pyinstaller --onefile portal_snake.py --add-data "background.png:." --add-data "eat.mp3:." --add-data "music.mp3:."
       
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3.1.2
+      - name: Upload executable
+        uses: actions/upload-artifact@v2
         with:
-          name: ${{ runner.os }} Build
-          path: |
-            build/*.exe
+          name: portal_snake
+          path: dist/portal_snake
