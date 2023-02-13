@@ -3,7 +3,6 @@ from collections import deque
 
 import pygame
 
-
 def game():
     # Initialize pygame and set screen size
     pygame.init()
@@ -17,13 +16,42 @@ def game():
 
     # Set colors
     white = (255, 255, 255)
-    black = (0, 0, 0)
     red = (255, 0, 0)
     blue = (0, 255, 255)
 
     # Set snake block size and initial position
+    background_path = 'background.png'
     block_size = 10
     snake_rect = pygame.Rect(width // 2, height // 2, block_size, block_size)
+
+    def create_tiled_background(image_path, block_size, screen_width, screen_height):
+        # Load the image and convert it to the same format as the screen
+        background_image = pygame.image.load(image_path).convert()
+
+        # Create a new surface to hold the tiled background
+        tiled_background = pygame.Surface((screen_width, screen_height))
+
+        # Loop to blit the subsurface repeatedly
+        for x in range(0, screen_width, block_size):
+            for y in range(0, screen_height, block_size):
+                subsurface_rect = pygame.Rect((x, y), (block_size, block_size))
+                tiled_background.blit(background_image, subsurface_rect)
+
+        return tiled_background
+
+    def draw_tiled_background(screen, background_surface):
+        screen.blit(background_surface, (0, 0))
+
+    background_surface = create_tiled_background(background_path, block_size, width, height)
+
+    # Load and play music continuously
+    pygame.mixer.music.load('music.mp3')
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(loops=-1)
+
+    # Load eat sfx
+    sfx = pygame.mixer.Sound('eat.mp3')
+    sfx.set_volume(1.0)
 
     # Set initial direction
     direction = "right"
@@ -81,6 +109,7 @@ def game():
         pygame.display.update()
         pygame.time.wait(2000)
         pygame.quit()
+        quit()
 
     key_queue = []
 
@@ -126,11 +155,12 @@ def game():
 
         last_direction = direction
 
-        screen.fill(black)
+        draw_tiled_background(screen, background_surface)
 
         # Check for collision with food
         for food in food_rects:
             if snake_rect.colliderect(food):
+                sfx.play()
                 score += 1
                 food_rects.remove(food)
                 snake_length += 1
@@ -159,6 +189,5 @@ def game():
 
         pygame.display.update()
         clock.tick(snake_speed)
-
 
 game()
