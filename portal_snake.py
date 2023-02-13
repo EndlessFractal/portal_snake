@@ -20,7 +20,7 @@ def game():
     blue = (0, 255, 255)
 
     # Set snake block size and initial position
-    background_path = 'resources/background.png'
+    background_path = os.path.join(sys._MEIPASS, 'resources', 'background.png')
     block_size = 10
     snake_rect = pygame.Rect(width // 2, height // 2, block_size, block_size)
 
@@ -44,13 +44,17 @@ def game():
 
     background_surface = create_tiled_background(background_path, block_size, width, height)
 
+    
+    audio = os.path.join(sys._MEIPASS, 'resources', 'music.mp3')
+    sound = os.path.join(sys._MEIPASS, 'resources', 'eat.mp3')
+    
     # Load and play music continuously
-    pygame.mixer.music.load('resources/music.mp3')
+    pygame.mixer.music.load(audio)
     pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play(loops=-1)
 
     # Load eat sfx
-    sfx = pygame.mixer.Sound('resources/eat.mp3')
+    sfx = pygame.mixer.Sound(sound)
     sfx.set_volume(1.0)
 
     # Set initial direction
