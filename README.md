@@ -14,7 +14,7 @@ Portal Snake takes the timeless concept of the snake game and adds a whole new d
 
 Feeling overwhelmed? Don't worry! Portal Snake features an AI assistance mode that takes control of the snake. Sit back and watch as the AI calculates the optimal path to the food items, showcasing its strategic prowess. You can even toggle AI control on the fly, seamlessly switching between manual and AI-guided gameplay.
 
-- Press the letter V (as in Viper) key to toggle AI control.
+- Press the letter V (as in Viper) to toggle AI control.
 - When AI control is enabled, the snake will automatically find the shortest path to the food using a BFS algorithm.
 - The snake will move towards the food, avoiding collisions with its own body.
 
